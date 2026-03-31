@@ -44,9 +44,11 @@ export default function LoginPage() {
       {/* Left side — branding panel */}
       <div className="hidden lg:flex w-1/2 bg-[#0C2340] relative flex-col items-center justify-center p-12">
         <div className="text-center">
-          <h1 className="text-5xl font-display italic font-bold text-white tracking-tight">
-            AMPLEX
-          </h1>
+          <img
+            src="https://amplex.com/wp-content/uploads/2020/12/amplex-logo.png"
+            alt="Amplex Corporation"
+            className="h-16 w-auto"
+          />
           <p className="text-xl text-white/80 mt-2">
             Customer Intelligence Portal
           </p>
@@ -77,9 +79,11 @@ export default function LoginPage() {
       <div className="w-full lg:w-1/2 bg-white flex flex-col items-center justify-center p-8">
         <div className="w-full max-w-sm mx-auto">
           {/* Branding */}
-          <h2 className="text-2xl font-display italic font-bold text-navy mb-1">
-            AMPLEX
-          </h2>
+          <img
+            src="https://amplex.com/wp-content/uploads/2020/12/amplex-logo.png"
+            alt="Amplex"
+            className="h-10 w-auto mb-1"
+          />
           <p className="text-muted-foreground text-sm mb-8">
             Sign in to your account
           </p>

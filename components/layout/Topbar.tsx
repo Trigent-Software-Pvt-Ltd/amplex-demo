@@ -22,9 +22,11 @@ export function Topbar() {
     <header className="fixed top-0 left-0 right-0 z-50 flex h-14 items-center justify-between bg-navy px-4">
       {/* Left section */}
       <div className="flex items-center">
-        <span className="font-display italic text-xl font-bold text-white">
-          Amplex
-        </span>
+        <img
+          src="https://amplex.com/wp-content/uploads/2020/12/amplex-logo.png"
+          alt="Amplex"
+          className="h-7 w-auto"
+        />
         <div className="border-r border-white/20 h-6 mx-3" />
         <span className="text-sm text-white/70">Customer Portal</span>
       </div>

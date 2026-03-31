@@ -1,7 +1,12 @@
-import { openai } from "@ai-sdk/openai";
+import { createAzure } from "@ai-sdk/azure";
 import { streamText } from "ai";
 
 export const maxDuration = 30;
+
+const azure = createAzure({
+  resourceName: process.env.AZURE_RESOURCE_NAME,
+  apiKey: process.env.AZURE_API_KEY,
+});
 
 const SYSTEM_PROMPT = `You are the AI assistant embedded in Amplex Corporation's Customer Portal.
 You are speaking to a buyer from Walmart Stores Inc.
@@ -51,7 +56,7 @@ export async function POST(req: Request) {
   const { messages } = await req.json();
 
   const result = streamText({
-    model: openai("gpt-4o"),
+    model: azure("gpt-4.1"),
     system: SYSTEM_PROMPT,
     messages,
   });
