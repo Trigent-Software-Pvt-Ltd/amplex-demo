@@ -1,17 +1,10 @@
 "use client";
 
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LogOut, User } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
@@ -26,6 +19,20 @@ const navLinks = [
 
 export function Topbar() {
   const pathname = usePathname();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    }
+    if (menuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => document.removeEventListener("mousedown", handleClickOutside);
+    }
+  }, [menuOpen]);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 flex h-14 items-center justify-between bg-[#C41230] px-4">
@@ -70,36 +77,35 @@ export function Topbar() {
           <span className="w-2 h-2 rounded-full bg-ampgreen animate-pulse" />
           <span className="text-xs text-white/80">AI Active</span>
         </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger className="focus:outline-none cursor-pointer">
-            <Avatar>
+        <div className="relative" ref={menuRef}>
+          <button
+            type="button"
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="focus:outline-none"
+          >
+            <Avatar className="cursor-pointer">
               <AvatarFallback className="bg-ampblue text-white text-xs">
                 WM
               </AvatarFallback>
             </Avatar>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuLabel>
-              <div className="flex flex-col">
-                <span className="font-semibold">Walmart Stores Inc.</span>
-                <span className="text-xs text-muted-foreground font-normal">walmart@amplex.com</span>
+          </button>
+          {menuOpen && (
+            <div className="absolute right-0 top-12 w-56 bg-white rounded-lg shadow-lg border py-1 z-50">
+              <div className="px-3 py-2 border-b">
+                <div className="font-semibold text-sm">Walmart Stores Inc.</div>
+                <div className="text-xs text-muted-foreground">walmart@amplex.com</div>
               </div>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="gap-2" disabled>
-              <User className="h-4 w-4" />
-              Profile
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="gap-2 text-red-600 focus:text-red-600 cursor-pointer"
-              onClick={() => { window.location.href = "/api/auth/logout"; }}
-            >
-              <LogOut className="h-4 w-4" />
-              Sign Out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+              <button
+                type="button"
+                onClick={() => { window.location.href = "/api/auth/logout"; }}
+                className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+              >
+                <LogOut className="h-4 w-4" />
+                Sign Out
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );
