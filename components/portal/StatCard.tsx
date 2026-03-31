@@ -19,11 +19,11 @@ const subTypeStyles: Record<string, string> = {
 };
 
 const iconBgStyles: Record<string, string> = {
-  blue: "bg-blue-100 text-blue-600",
-  green: "bg-emerald-100 text-emerald-600",
-  amber: "bg-amber-100 text-amber-600",
-  red: "bg-red-100 text-red-600",
-  teal: "bg-teal-100 text-teal-600",
+  blue: "bg-blue-500 text-white",
+  green: "bg-emerald-500 text-white",
+  amber: "bg-amber-500 text-white",
+  red: "bg-red-500 text-white",
+  teal: "bg-teal-500 text-white",
 };
 
 export function StatCard({ value, label, sub, subType = "info", icon, iconColor = "blue" }: StatCardProps) {
@@ -31,8 +31,8 @@ export function StatCard({ value, label, sub, subType = "info", icon, iconColor 
     <Card>
       <CardContent className="relative">
         {icon && (
-          <div className={cn("absolute top-0 right-0 w-10 h-10 rounded-lg flex items-center justify-center", iconBgStyles[iconColor])}>
-            <div className="h-5 w-5 [&>svg]:h-5 [&>svg]:w-5">
+          <div className={cn("absolute top-0 right-0 w-12 h-12 rounded-xl flex items-center justify-center shadow-sm", iconBgStyles[iconColor])}>
+            <div className="h-6 w-6 [&>svg]:h-6 [&>svg]:w-6">
               {icon}
             </div>
           </div>
