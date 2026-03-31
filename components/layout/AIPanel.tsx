@@ -6,6 +6,7 @@ import { SendHorizontal } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { ActionCard } from "@/components/portal/ActionCard";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 import type { UIMessage } from "ai";
 
 const quickChips = [
@@ -91,6 +92,7 @@ const actionMeta: Record<
 
 export function AIPanel() {
   const [input, setInput] = useState("");
+  const [dismissedActions, setDismissedActions] = useState<Set<string>>(new Set());
   const initialMessages: UIMessage[] = [
     {
       id: "welcome",
@@ -175,13 +177,25 @@ export function AIPanel() {
               >
                 {text}
               </div>
-              {actionType && (
+              {actionType && !dismissedActions.has(msg.id) && (
                 <ActionCard
                   type={actionType}
                   title={actionMeta[actionType].title}
                   description={actionMeta[actionType].description}
-                  onConfirm={() => {}}
-                  onCancel={() => {}}
+                  onConfirm={() => {
+                    setDismissedActions((prev) => new Set(prev).add(msg.id));
+                    if (actionType === "reorder") {
+                      toast.success("✓ ORD-2026-2250 placed — Amplex operations processing");
+                    } else if (actionType === "return") {
+                      toast.success("✓ RMA-2026-0090 created — Amplex operations notified");
+                    } else if (actionType === "report") {
+                      toast.success("✓ Report generating — you'll be notified when ready");
+                    }
+                  }}
+                  onCancel={() => {
+                    setDismissedActions((prev) => new Set(prev).add(msg.id));
+                    toast("Action cancelled");
+                  }}
                 />
               )}
             </div>
