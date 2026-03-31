@@ -7,9 +7,16 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace, monospace;
   --font-heading: var(--font-sans);
+  --font-display: "Instrument Sans", var(--font-sans);
+  --font-code: "IBM Plex Mono", var(--font-mono);
+  --color-navy: #0C2340;
+  --color-ampblue: #1652CC;
+  --color-ampteal: #0891B2;
+  --color-ampgreen: #0D7A45;
+  --color-page-bg: #F4F6FA;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -55,7 +62,7 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  --primary: oklch(0.45 0.2 264);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -67,11 +74,11 @@
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
+  --chart-1: oklch(0.45 0.2 264);
+  --chart-2: oklch(0.55 0.15 200);
+  --chart-3: oklch(0.5 0.15 155);
+  --chart-4: oklch(0.25 0.05 250);
+  --chart-5: oklch(0.65 0.1 264);
   --radius: 0.625rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
@@ -127,4 +134,15 @@
   html {
     @apply font-sans;
   }
+}
+
+@keyframes orb-pulse {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.ai-orb {
+  background: linear-gradient(135deg, #1652CC, #7C3AED, #0891B2, #1652CC);
+  background-size: 300% 300%;
+  animation: orb-pulse 4s ease infinite;
 }
