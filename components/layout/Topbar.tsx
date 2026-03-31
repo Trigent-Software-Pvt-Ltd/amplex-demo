@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LogOut, User } from "lucide-react";
-import { handleSignOut } from "@/app/(portal)/actions";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -93,8 +92,8 @@ export function Topbar() {
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              className="gap-2 text-red-600 focus:text-red-600"
-              onClick={() => handleSignOut()}
+              className="gap-2 text-red-600 focus:text-red-600 cursor-pointer"
+              onClick={() => { window.location.href = "/api/auth/logout"; }}
             >
               <LogOut className="h-4 w-4" />
               Sign Out
