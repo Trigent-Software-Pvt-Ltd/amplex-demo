@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Amplex Corporation — AI-Powered Customer Portal
+
+**Live:** [https://amplex-demo.vercel.app](https://amplex-demo.vercel.app)
+
+An AI-powered customer portal for Amplex Corporation, a 3PL company in Grand Prairie, TX that kits and fulfills telecom handsets for brands like SimplMobile, TrackPhone, and TotalWireless.
+
+## Features
+
+- **AI Chat Assistant** — Azure OpenAI-powered chat with live iSeries V7R3 data context. Ask about inventory, orders, OTIF, or request reorders/returns/reports.
+- **Dashboard** — KPIs, alert banners, recent shipments at a glance
+- **Receiving** — Inbound PO tracking with progress bars
+- **Kitting & Bundling** — Work order management with BOM viewer and timeline charts
+- **Inventory** — Available/Allocated/Quarantined views with stock level bars
+- **Fulfillment** — Full order lifecycle (open, back orders, shipped, cancelled, changes)
+- **Returns** — RMA log with multi-step return wizard
+- **Quick Reorder** — One-click reorder from previous orders
+- **Reports** — Generate OTIF, inventory, fulfillment, and accessorial reports
+
+## Tech Stack
+
+- [Next.js 16](https://nextjs.org/) (App Router)
+- [Tailwind CSS 4](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/)
+- [Vercel AI SDK](https://sdk.vercel.ai/) + Azure OpenAI (gpt-4.1)
+- [NextAuth.js v5](https://authjs.dev/) (mock credentials)
+- [Recharts](https://recharts.org/) + [Lucide React](https://lucide.dev/)
+- Deployed on [Vercel](https://vercel.com/)
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). Demo login: `walmart@amplex.com` / `demo123`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Copy `.env.example` to `.env.local` and fill in:
 
-## Learn More
+```
+AZURE_RESOURCE_NAME=    # Azure OpenAI resource name
+AZURE_API_KEY=          # Azure OpenAI API key
+AUTH_SECRET=            # NextAuth session secret
+AUTH_URL=               # http://localhost:3000 for dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Deploy
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npx vercel --prod --yes --scope trigent-ark-os
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Powered by [Trigent ArkOS](https://www.arkos.studio/)

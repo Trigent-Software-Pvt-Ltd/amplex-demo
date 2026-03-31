@@ -31,7 +31,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       {/* Hero Banner */}
-      <div className="rounded-2xl bg-gradient-to-r from-[#0C2340] to-[#1a3a5c] p-8 text-white">
+      <div className="rounded-2xl bg-gradient-to-r from-[#0C2340] via-[#0C2340] to-[#1a2a45] p-8 text-white">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
           <div>
             <h1 className="text-2xl font-display font-bold">
@@ -66,6 +66,7 @@ export default function DashboardPage() {
           sub="2 backorders"
           subType="warning"
           icon={<ShoppingCart className="size-5" />}
+          iconColor="amber"
         />
         <StatCard
           value="14,820"
@@ -73,6 +74,7 @@ export default function DashboardPage() {
           sub="Healthy"
           subType="success"
           icon={<Package className="size-5" />}
+          iconColor="green"
         />
         <StatCard
           value="4"
@@ -80,6 +82,7 @@ export default function DashboardPage() {
           sub="4,400 units"
           subType="info"
           icon={<Truck className="size-5" />}
+          iconColor="teal"
         />
         <StatCard
           value="6"
@@ -87,6 +90,7 @@ export default function DashboardPage() {
           sub="4 restocked"
           subType="warning"
           icon={<RotateCcw className="size-5" />}
+          iconColor="amber"
         />
       </div>
 

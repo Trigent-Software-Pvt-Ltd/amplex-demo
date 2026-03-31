@@ -44,11 +44,12 @@ export default function LoginPage() {
       {/* Left side — branding panel */}
       <div className="hidden lg:flex w-1/2 bg-[#0C2340] relative flex-col items-center justify-center p-12">
         <div className="text-center">
-          <img
-            src="https://amplex.com/wp-content/uploads/2020/12/amplex-logo.png"
-            alt="Amplex Corporation"
-            className="h-16 w-auto"
-          />
+          <div className="flex items-baseline gap-1 justify-center">
+            <span className="text-[#C41230] font-bold text-4xl tracking-tight">&gt;&gt;&gt;</span>
+            <span className="text-white font-bold text-5xl tracking-tight" style={{ fontFamily: "'Georgia', serif" }}>Amplex</span>
+            <span className="text-[#C41230] font-bold text-4xl tracking-tight">&gt;</span>
+          </div>
+          <p className="text-xs uppercase tracking-[0.3em] text-white/60 mt-1 text-center">C O R P O R A T I O N</p>
           <p className="text-xl text-white/80 mt-2">
             Customer Intelligence Portal
           </p>
@@ -79,11 +80,11 @@ export default function LoginPage() {
       <div className="w-full lg:w-1/2 bg-white flex flex-col items-center justify-center p-8">
         <div className="w-full max-w-sm mx-auto">
           {/* Branding */}
-          <img
-            src="https://amplex.com/wp-content/uploads/2020/12/amplex-logo.png"
-            alt="Amplex"
-            className="h-10 w-auto mb-1"
-          />
+          <div className="flex items-baseline gap-0.5 mb-1">
+            <span className="text-[#C41230] font-bold text-2xl tracking-tight">&gt;&gt;&gt;</span>
+            <span className="text-[#0C2340] font-bold text-3xl tracking-tight" style={{ fontFamily: "'Georgia', serif" }}>Amplex</span>
+            <span className="text-[#C41230] font-bold text-2xl tracking-tight">&gt;</span>
+          </div>
           <p className="text-muted-foreground text-sm mb-8">
             Sign in to your account
           </p>
