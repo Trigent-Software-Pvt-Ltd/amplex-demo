@@ -1,16 +1,26 @@
 export function Footer() {
   return (
-    <footer className="border-t bg-[#0a0a0f] py-6">
-      <div className="flex flex-col items-center gap-2">
+    <footer>
+      {/* Main footer area */}
+      <div className="bg-[#333333] py-8 flex flex-col items-center gap-3">
+        <img
+          src="https://amplex.com/wp-content/uploads/2019/10/logo-wyt-300x56.png"
+          alt="Amplex Corporation"
+          className="h-10 w-auto"
+        />
+        <p className="text-sm text-white/50">Powered by Trigent ArkOS</p>
+      </div>
+
+      {/* Bottom copyright bar */}
+      <div className="bg-[#C41230] py-3 px-6 flex items-center justify-between">
+        <span className="text-sm text-white font-medium">
+          AMPLEX CORPORATION &copy; 2026
+        </span>
         <img
           src="https://www.arkos.studio/TrigentArkOS-fullcolor-white.svg"
-          alt="Trigent ArkOS"
-          className="h-8 w-auto"
+          alt="ArkOS"
+          className="h-5 w-auto"
         />
-        <p className="text-sm text-white/60">Powered by Trigent ArkOS</p>
-        <p className="text-xs text-white/40">
-          &copy; 2026. All Rights Reserved.
-        </p>
       </div>
     </footer>
   );

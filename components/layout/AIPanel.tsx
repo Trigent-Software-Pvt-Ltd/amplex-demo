@@ -140,7 +140,11 @@ export function AIPanel() {
     <aside className="w-96 shrink-0 bg-white border-l flex flex-col h-full">
       {/* Header */}
       <div className="flex items-center gap-3 p-4 border-b">
-        <div className="ai-orb w-10 h-10 rounded-full shrink-0" />
+        <img
+          src="https://amplex.com/wp-content/uploads/2020/11/favicon.png"
+          alt="Amplex AI"
+          className="w-10 h-10 rounded-full shrink-0 object-contain"
+        />
         <div>
           <div className="font-display font-semibold text-lg leading-tight">
             Amplex AI

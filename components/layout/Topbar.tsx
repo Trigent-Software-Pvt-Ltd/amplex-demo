@@ -19,14 +19,14 @@ export function Topbar() {
   const pathname = usePathname();
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 flex h-14 items-center justify-between bg-navy px-4">
+    <header className="fixed top-0 left-0 right-0 z-50 flex h-14 items-center justify-between bg-[#C41230] px-4">
       {/* Left section */}
       <div className="flex items-center">
-        <div className="flex items-baseline gap-0.5">
-          <span className="text-[#C41230] font-bold text-lg tracking-tight">&gt;&gt;&gt;</span>
-          <span className="text-white font-bold text-xl tracking-tight" style={{ fontFamily: "'Georgia', serif" }}>Amplex</span>
-          <span className="text-[#C41230] font-bold text-lg tracking-tight">&gt;</span>
-        </div>
+        <img
+          src="https://amplex.com/wp-content/uploads/2019/10/logo-wyt-300x56.png"
+          alt="Amplex Corporation"
+          className="h-7 w-auto"
+        />
         <div className="border-r border-white/20 h-6 mx-3" />
         <span className="text-sm text-white/70">Customer Portal</span>
       </div>
@@ -42,8 +42,8 @@ export function Topbar() {
               className={cn(
                 "text-sm transition-colors",
                 isActive
-                  ? "text-white bg-white/10 rounded-md px-3 py-1"
-                  : "text-white/70 hover:text-white px-3 py-1"
+                  ? "text-white bg-white/20 rounded-md px-3 py-1"
+                  : "text-white/80 hover:text-white px-3 py-1"
               )}
             >
               {link.label}
@@ -54,12 +54,12 @@ export function Topbar() {
 
       {/* Right section */}
       <div className="flex items-center gap-3">
-        <span className="font-code text-xs bg-ampteal/20 text-ampteal border border-ampteal/30 rounded-full px-3 py-1">
+        <span className="font-code text-xs bg-white/20 text-white border border-white/30 rounded-full px-3 py-1">
           iSeries V7R3
         </span>
         <div className="flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-full bg-ampgreen animate-pulse" />
-          <span className="text-xs text-ampgreen">AI Active</span>
+          <span className="text-xs text-white/80">AI Active</span>
         </div>
         <Avatar>
           <AvatarFallback className="bg-ampblue text-white text-xs">

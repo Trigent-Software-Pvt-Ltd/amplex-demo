@@ -29,7 +29,8 @@ export const metadata: Metadata = {
   title: "Amplex Customer Portal",
   description: "AI-Powered Customer Intelligence Portal for Amplex Corporation",
   icons: {
-    icon: "https://trigent.com/wp-content/uploads/trigent-_favicon.svg",
+    icon: "https://amplex.com/wp-content/uploads/2020/11/favicon.png",
+    apple: "https://amplex.com/wp-content/uploads/2020/11/favicon.png",
   },
 };
 
