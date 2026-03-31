@@ -160,7 +160,7 @@ export function AIPanel() {
   }
 
   return (
-    <aside className="w-96 shrink-0 bg-white border-l flex flex-col h-full">
+    <aside className="w-96 shrink-0 bg-white border-l flex flex-col h-full overflow-hidden">
       {/* Header */}
       <div className="flex items-center gap-3 p-4 border-b">
         <img
@@ -179,7 +179,7 @@ export function AIPanel() {
       </div>
 
       {/* Messages area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 min-h-0 overflow-y-auto p-4 space-y-4">
         {messages.map((msg) => {
           const isUser = msg.role === "user";
           const isAssistant = msg.role === "assistant";
@@ -254,14 +254,14 @@ export function AIPanel() {
       </div>
 
       {/* Quick chips */}
-      <div className="flex gap-2 px-4 py-2 overflow-x-auto border-t [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+      <div className="flex flex-wrap gap-1.5 px-3 py-2 border-t">
         {quickChips.map((chip) => (
           <button
             key={chip}
             type="button"
             onClick={() => sendMessage(chip)}
             disabled={isLoading}
-            className="text-xs border rounded-full px-3 py-1.5 whitespace-nowrap cursor-pointer hover:bg-muted transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="text-[11px] border rounded-full px-2.5 py-1 whitespace-nowrap cursor-pointer hover:bg-muted transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {chip}
           </button>
