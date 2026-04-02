@@ -41,6 +41,9 @@ credentials.csv
 # vercel
 .vercel
 
+# screenshots
+/screenshots/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

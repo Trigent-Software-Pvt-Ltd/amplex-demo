@@ -16,6 +16,7 @@ interface Column<T> {
   render?: (item: T) => React.ReactNode;
   mono?: boolean;
   className?: string;
+  hiddenOnMobile?: boolean;
 }
 
 interface DataTableProps<T> {
@@ -38,11 +39,12 @@ export function DataTable<T extends Record<string, unknown>>({
           <ISeriesTag table={iSeriesTable} />
         </div>
       )}
+      <div className="overflow-x-auto">
       <Table>
         <TableHeader>
           <TableRow>
             {columns.map((col) => (
-              <TableHead key={col.key} className={col.className}>
+              <TableHead key={col.key} className={cn(col.hiddenOnMobile && "hidden md:table-cell", col.className)}>
                 {col.header}
               </TableHead>
             ))}
@@ -65,6 +67,7 @@ export function DataTable<T extends Record<string, unknown>>({
                   <TableCell
                     key={col.key}
                     className={cn(
+                      col.hiddenOnMobile && "hidden md:table-cell",
                       col.mono && "font-mono text-xs",
                       col.className
                     )}
@@ -79,6 +82,7 @@ export function DataTable<T extends Record<string, unknown>>({
           )}
         </TableBody>
       </Table>
+      </div>
     </div>
   );
 }

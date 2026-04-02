@@ -1,8 +1,20 @@
 "use client";
 
+import { Suspense } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 import { ISeriesTag } from "@/components/portal/ISeriesTag";
 import { DataTable } from "@/components/portal/DataTable";
 import { StatusPill } from "@/components/portal/StatusPill";
@@ -10,6 +22,7 @@ import { AlertBanner } from "@/components/portal/AlertBanner";
 import { StockBar } from "@/components/portal/StockBar";
 import { INVENTORY, ALLOCATED_INVENTORY } from "@/lib/mockData";
 import type { AllocatedInventory, InventoryItem } from "@/lib/types";
+import { useSearchParams, useRouter } from "next/navigation";
 
 const allocatedColumns: {
   key: string;
@@ -37,13 +50,27 @@ const quarantinedColumns: {
   { key: "estRelease", header: "Est. Release" },
 ];
 
+const VALID_TABS = ["available", "allocated", "quarantined"];
+
 export default function InventoryPage() {
+  return (
+    <Suspense>
+      <InventoryContent />
+    </Suspense>
+  );
+}
+
+function InventoryContent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const tabParam = searchParams.get("tab");
+  const activeTab = VALID_TABS.includes(tabParam ?? "") ? tabParam! : "available";
   const quarantinedItems = INVENTORY.filter((item) => item.quarantined > 0);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div>
-        <h1 className="text-2xl font-display font-bold">
+        <h1 className="text-xl font-display font-bold">
           Inventory Management
         </h1>
         <p className="text-sm text-muted-foreground">
@@ -51,7 +78,16 @@ export default function InventoryPage() {
         </p>
       </div>
 
-      <Tabs defaultValue="available">
+      <Tabs value={activeTab} onValueChange={(value) => {
+        const params = new URLSearchParams(searchParams.toString());
+        if (value === "available") {
+          params.delete("tab");
+        } else {
+          params.set("tab", value);
+        }
+        const query = params.toString();
+        router.replace(`/inventory${query ? `?${query}` : ""}`, { scroll: false });
+      }}>
         <TabsList>
           <TabsTrigger value="available">Available</TabsTrigger>
           <TabsTrigger value="allocated">Allocated</TabsTrigger>
@@ -112,9 +148,32 @@ export default function InventoryPage() {
                     </p>
                   )}
 
-                  <Button className="w-full bg-[#1652CC] text-white hover:bg-[#1652CC]/90">
-                    Order Now
-                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger className="w-full inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium bg-[#0C2340] text-white hover:bg-[#0C2340]/90 cursor-pointer">
+                      Order Now
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Confirm Order</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Confirm order for {item.name}? This will place a replenishment order for {item.sku}.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          className="bg-[#0C2340] text-white hover:bg-[#0C2340]/90"
+                          onClick={() =>
+                            toast.success(
+                              "\u2713 ORD-2026-2250 placed \u2014 Amplex operations processing"
+                            )
+                          }
+                        >
+                          Confirm
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </CardContent>
               </Card>
             ))}

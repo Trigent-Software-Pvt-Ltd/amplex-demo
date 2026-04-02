@@ -1,9 +1,14 @@
+"use client";
+
+import { Suspense } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DataTable } from "@/components/portal/DataTable";
 import { ISeriesTag } from "@/components/portal/ISeriesTag";
 import { StatusPill } from "@/components/portal/StatusPill";
 import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { INBOUND_POS, RECEIVED_POS } from "@/lib/mockData";
+import { useSearchParams, useRouter } from "next/navigation";
 
 type Row = Record<string, unknown>;
 
@@ -34,7 +39,7 @@ const inboundColumns = [
     render: (item: Record<string, unknown>) => {
       const pct = item.progress as number;
       return (
-        <div className="flex items-center gap-2 min-w-[120px]">
+        <div className="flex items-center gap-2 min-w-[90px]">
           <Progress value={pct} className="flex-1">
             <span className="text-xs text-muted-foreground tabular-nums">
               {pct}%
@@ -65,49 +70,81 @@ const receivedColumns = [
   },
 ];
 
+const VALID_TABS = ["open", "received"];
+
 export default function ReceivingPage() {
   return (
-    <div className="space-y-6">
+    <Suspense>
+      <ReceivingContent />
+    </Suspense>
+  );
+}
+
+function ReceivingContent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const tabParam = searchParams.get("tab");
+  const activeTab = VALID_TABS.includes(tabParam ?? "") ? tabParam! : "open";
+
+  return (
+    <div className="space-y-4">
       {/* Page Header */}
       <div>
-        <h1 className="text-2xl font-display font-bold">Receiving</h1>
-        <p className="text-sm text-muted-foreground mt-1">
+        <h1 className="text-xl font-display font-bold">Receiving</h1>
+        <p className="text-sm text-muted-foreground">
           Inbound purchase order tracking
         </p>
       </div>
 
-      {/* Two-section layout */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        {/* Section 1: Open Inbound POs */}
-        <Card className="xl:col-span-2">
-          <CardHeader>
-            <div className="flex items-center gap-3">
-              <CardTitle className="text-lg font-semibold">
-                Open Inbound POs
-              </CardTitle>
-              <ISeriesTag table="PORCVHDR" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <DataTable columns={inboundColumns} data={INBOUND_POS as unknown as Row[]} />
-          </CardContent>
-        </Card>
+      <Tabs value={activeTab} onValueChange={(value) => {
+        const params = new URLSearchParams(searchParams.toString());
+        if (value === "open") {
+          params.delete("tab");
+        } else {
+          params.set("tab", value);
+        }
+        const query = params.toString();
+        router.replace(`/receiving${query ? `?${query}` : ""}`, { scroll: false });
+      }}>
+        <TabsList>
+          <TabsTrigger value="open">Open Inbound POs</TabsTrigger>
+          <TabsTrigger value="received">Received POs</TabsTrigger>
+        </TabsList>
 
-        {/* Section 2: Received POs */}
-        <Card className="xl:col-span-2">
-          <CardHeader>
-            <div className="flex items-center gap-3">
-              <CardTitle className="text-lg font-semibold">
-                Received POs
-              </CardTitle>
-              <ISeriesTag table="PORCVHDR + RCVLOG" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <DataTable columns={receivedColumns} data={RECEIVED_POS as unknown as Row[]} />
-          </CardContent>
-        </Card>
-      </div>
+        {/* ── Open Inbound POs Tab ── */}
+        <TabsContent value="open" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <CardTitle className="text-lg font-semibold">
+                  Open Inbound POs
+                </CardTitle>
+                <ISeriesTag table="PORCVHDR" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <DataTable columns={inboundColumns} data={INBOUND_POS as unknown as Row[]} />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* ── Received POs Tab ── */}
+        <TabsContent value="received" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <CardTitle className="text-lg font-semibold">
+                  Received POs
+                </CardTitle>
+                <ISeriesTag table="PORCVHDR + RCVLOG" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <DataTable columns={receivedColumns} data={RECEIVED_POS as unknown as Row[]} />
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

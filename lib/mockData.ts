@@ -719,6 +719,67 @@ export const BOMS: BOM[] = [
       },
     ],
   },
+  {
+    kitSku: "PROMO-Q2",
+    kitName: "Q2 Promotional Kit",
+    components: [
+      {
+        component: "Standard Handset Body",
+        sku: "CMP-HB-001",
+        qtyPerKit: 1,
+        scanRequired: true,
+      },
+      {
+        component: "Battery",
+        sku: "CMP-BAT-001",
+        qtyPerKit: 1,
+        scanRequired: true,
+      },
+      {
+        component: "Battery Cover",
+        sku: "CMP-BC-001",
+        qtyPerKit: 1,
+        scanRequired: false,
+      },
+      {
+        component: "SIM Card",
+        sku: "CMP-SIM-001",
+        qtyPerKit: 1,
+        scanRequired: true,
+        pairingNote: "IMEI-to-ICCID pairing required at scan station",
+      },
+      {
+        component: "Premium Case",
+        sku: "CMP-PC-001",
+        qtyPerKit: 1,
+        scanRequired: false,
+      },
+      {
+        component: "Screen Protector",
+        sku: "CMP-SP-001",
+        qtyPerKit: 1,
+        scanRequired: false,
+      },
+      {
+        component: "USB-C Charger",
+        sku: "CMP-CHG-001",
+        qtyPerKit: 1,
+        scanRequired: false,
+      },
+      {
+        component: "Q2 Promo Insert Card",
+        sku: "CMP-PIC-Q2",
+        qtyPerKit: 1,
+        scanRequired: false,
+      },
+      {
+        component: "Promo Branded Box",
+        sku: "CMP-PB-Q2",
+        qtyPerKit: 1,
+        scanRequired: false,
+      },
+    ],
+  },
 ];
 
 // ---------------------------------------------------------------------------

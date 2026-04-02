@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { Sparkles, Minus, Plus } from "lucide-react";
+import { Sparkles, Minus, Plus, RefreshCw } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -47,12 +47,15 @@ const orderColumns: {
 function ReorderCard({
   item,
   topRef,
+  qty,
+  setQty,
 }: {
   item: (typeof INVENTORY)[number];
   topRef: React.RefObject<HTMLDivElement | null>;
+  qty: number;
+  setQty: (qty: number) => void;
 }) {
   const lastOrder = getLastOrder(item.sku);
-  const [qty, setQty] = useState(lastOrder?.qty ?? 120);
 
   return (
     <Card>
@@ -83,8 +86,8 @@ function ReorderCard({
           <Button
             variant="outline"
             size="icon"
-            className="size-8"
-            onClick={() => setQty((q) => Math.max(120, q - 120))}
+            className="size-10"
+            onClick={() => setQty(Math.max(120, qty - 120))}
           >
             <Minus className="size-4" />
           </Button>
@@ -92,8 +95,8 @@ function ReorderCard({
           <Button
             variant="outline"
             size="icon"
-            className="size-8"
-            onClick={() => setQty((q) => q + 120)}
+            className="size-10"
+            onClick={() => setQty(qty + 120)}
           >
             <Plus className="size-4" />
           </Button>
@@ -151,6 +154,16 @@ function ReorderCard({
 export default function ReorderPage() {
   const topRef = useRef<HTMLDivElement>(null);
 
+  // Lifted quantity state keyed by SKU — initialized from last order or default
+  const [quantities, setQuantities] = useState<Record<string, number>>(() => {
+    const init: Record<string, number> = {};
+    for (const item of INVENTORY) {
+      const lastOrder = getLastOrder(item.sku);
+      init[item.sku] = lastOrder?.qty ?? 120;
+    }
+    return init;
+  });
+
   const previousOrderColumns: {
     key: string;
     header: string;
@@ -166,54 +179,61 @@ export default function ReorderPage() {
     {
       key: "_action",
       header: "",
-      render: () => (
+      render: (item: Record<string, unknown>) => (
         <Button
           size="sm"
           variant="outline"
           className="text-[#1652CC] border-[#1652CC]"
           onClick={() => {
+            const sku = item.sku as string;
+            const qty = item.qty as number;
+            setQuantities((prev) => ({ ...prev, [sku]: qty }));
             toast.success("Reorder details pre-filled above");
             topRef.current?.scrollIntoView({ behavior: "smooth" });
           }}
         >
-          ⟳ Repeat Order
+          <RefreshCw className="size-3.5 mr-1.5" /> Repeat Order
         </Button>
       ),
     },
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Title */}
       <div ref={topRef}>
-        <h1 className="text-2xl font-bold">Quick Reorder</h1>
+        <h1 className="text-xl font-bold">Quick Reorder</h1>
         <p className="text-sm text-muted-foreground">
           Repeat from previous orders
         </p>
       </div>
 
       {/* AI Tip Banner */}
-      <Card className="bg-blue-50 border-blue-200 border-l-4 border-l-[#0891B2] p-4">
-        <div className="flex items-start gap-3">
-          <Sparkles className="size-5 text-[#0891B2] mt-0.5 shrink-0" />
-          <p className="text-sm">
-            💡 <strong>AI Insight:</strong> SGM-ACC-KIT is at critical low stock
-            (660 units). Current velocity suggests 1.9 weeks of stock remaining.
-            Recommend placing a replenishment order before the QC hold resolves.
+      <div className="bg-blue-50 border border-blue-200 border-l-4 border-l-[#0891B2] rounded-lg px-3 py-2">
+        <div className="flex items-center gap-2">
+          <Sparkles className="size-4 text-[#0891B2] shrink-0" />
+          <p className="text-xs">
+            <strong>AI Insight:</strong> SGM-ACC-KIT is at critical low stock (660 units). Current velocity suggests 1.9 weeks remaining. Recommend placing a replenishment order before the QC hold resolves.
           </p>
         </div>
-      </Card>
+      </div>
 
       {/* Reorder Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {INVENTORY.map((item) => (
-          <ReorderCard key={item.sku} item={item} topRef={topRef} />
+          <ReorderCard
+            key={item.sku}
+            item={item}
+            topRef={topRef}
+            qty={quantities[item.sku] ?? 120}
+            setQty={(q) => setQuantities((prev) => ({ ...prev, [item.sku]: q }))}
+          />
         ))}
       </div>
 
       {/* Previous Orders Table */}
-      <div className="mt-8">
-        <h2 className="text-xl font-semibold mb-4">Previous Orders</h2>
+      <div>
+        <h2 className="text-lg font-semibold mb-3">Previous Orders</h2>
         <Card>
           <CardContent>
             <DataTable

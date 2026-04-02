@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -35,7 +36,22 @@ import {
 import type { Order, OrderChange } from "@/lib/types";
 import { toast } from "sonner";
 
+const VALID_TABS = ["open", "backorders", "shipped", "cancelled", "changes"];
+
 export default function FulfillmentPage() {
+  return (
+    <Suspense>
+      <FulfillmentContent />
+    </Suspense>
+  );
+}
+
+function FulfillmentContent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const tabParam = searchParams.get("tab");
+  const activeTab = VALID_TABS.includes(tabParam ?? "") ? tabParam! : "open";
+
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [orderChanges, setOrderChanges] = useState<OrderChange[]>([
     ...INITIAL_ORDER_CHANGES,
@@ -92,30 +108,44 @@ export default function FulfillmentPage() {
             <SheetHeader>
               <SheetTitle>Order Details</SheetTitle>
             </SheetHeader>
-            <div className="mt-6 space-y-4">
-              <DetailRow label="Order ID" value={item.id as string} mono />
-              <DetailRow
-                label="PO Number"
-                value={item.poNumber as string}
-                mono
-              />
-              <DetailRow label="SKU" value={item.sku as string} mono />
-              <DetailRow label="SKU Name" value={item.skuName as string} />
-              <DetailRow label="Qty" value={String(item.qty)} />
-              <DetailRow
-                label="Destination"
-                value={item.destination as string}
-              />
-              <DetailRow
-                label="Order Date"
-                value={item.orderDate as string}
-              />
-              <DetailRow label="Ship By" value={item.shipBy as string} />
-              <DetailRow
-                label="Status"
-                value={item.status as string}
-                pill
-              />
+            <div className="px-4 pb-4 space-y-5">
+              {/* Order Identity */}
+              <div className="bg-muted/50 rounded-lg p-3 space-y-1">
+                <div className="font-mono text-base font-semibold">{item.id as string}</div>
+                <div className="text-xs text-muted-foreground">PO: <span className="font-mono">{item.poNumber as string}</span></div>
+              </div>
+
+              {/* Product Info */}
+              <div className="space-y-2">
+                <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Product</h4>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm">
+                  <span className="text-muted-foreground">SKU</span>
+                  <span className="font-mono">{item.sku as string}</span>
+                  <span className="text-muted-foreground">Name</span>
+                  <span>{item.skuName as string}</span>
+                  <span className="text-muted-foreground">Quantity</span>
+                  <span className="font-mono font-medium">{String(item.qty)}</span>
+                </div>
+              </div>
+
+              {/* Shipping Info */}
+              <div className="space-y-2">
+                <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Shipping</h4>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm">
+                  <span className="text-muted-foreground">Destination</span>
+                  <span>{item.destination as string}</span>
+                  <span className="text-muted-foreground">Order Date</span>
+                  <span>{item.orderDate as string}</span>
+                  <span className="text-muted-foreground">Ship By</span>
+                  <span className="font-medium">{item.shipBy as string}</span>
+                </div>
+              </div>
+
+              {/* Status */}
+              <div className="flex items-center justify-between border-t pt-3">
+                <span className="text-sm text-muted-foreground">Status</span>
+                <StatusPill status={item.status as string} />
+              </div>
             </div>
           </SheetContent>
         </Sheet>
@@ -285,15 +315,24 @@ export default function FulfillmentPage() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div>
-        <h1 className="text-2xl font-display font-bold">Fulfillment</h1>
+        <h1 className="text-xl font-display font-bold">Fulfillment</h1>
         <p className="text-sm text-muted-foreground">
           Order management and shipping operations
         </p>
       </div>
 
-      <Tabs defaultValue="open">
+      <Tabs value={activeTab} onValueChange={(value) => {
+        const params = new URLSearchParams(searchParams.toString());
+        if (value === "open") {
+          params.delete("tab");
+        } else {
+          params.set("tab", value);
+        }
+        const query = params.toString();
+        router.replace(`/fulfillment${query ? `?${query}` : ""}`, { scroll: false });
+      }}>
         <TabsList>
           <TabsTrigger value="open">Open Orders</TabsTrigger>
           <TabsTrigger value="backorders">Back Orders</TabsTrigger>

@@ -10,8 +10,8 @@ import { Button } from "@/components/ui/button";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("walmart@amplex.com");
+  const [password, setPassword] = useState("demo123");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -77,7 +77,7 @@ export default function LoginPage() {
 
       {/* Right side — login form */}
       <div className="w-full lg:w-1/2 bg-white flex flex-col items-center justify-center p-8">
-        <div className="w-full max-w-sm mx-auto">
+        <div className="w-full max-w-sm mx-auto flex flex-col items-start justify-center flex-1">
           {/* Branding */}
           <img
             src="https://amplex.com/wp-content/uploads/2020/12/amplex-logo.png"
@@ -89,7 +89,7 @@ export default function LoginPage() {
           </p>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4 w-full">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -128,7 +128,7 @@ export default function LoginPage() {
           </form>
 
           {/* Demo credentials hint */}
-          <div className="mt-6 bg-muted rounded-lg p-4">
+          <div className="mt-6 bg-muted rounded-lg p-4 w-full">
             <p className="font-bold text-sm">Demo Credentials</p>
             <p className="font-code text-xs mt-1">Email: walmart@amplex.com</p>
             <p className="font-code text-xs">Password: demo123</p>
@@ -136,7 +136,7 @@ export default function LoginPage() {
         </div>
 
         {/* Footer */}
-        <div className="mt-auto pt-8 flex flex-col items-center gap-3">
+        <div className="pt-8 flex flex-col items-center gap-3">
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <Lock className="h-3 w-3" />
             <span>Powered by Trigent ArkOS</span>

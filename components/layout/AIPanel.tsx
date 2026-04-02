@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { SendHorizontal } from "lucide-react";
+import { SendHorizontal, MessageCircle, X } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { ActionCard } from "@/components/portal/ActionCard";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { useMobileNav } from "./MobileNavProvider";
 
 // Quick chip suggestions
 const quickChips = [
@@ -41,149 +42,34 @@ const actionMeta = {
   report: { title: "Generate Report", description: "The report will be generated and sent to your email." },
 };
 
-export function AIPanel() {
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: "welcome",
-      role: "assistant",
-      content:
-        "Welcome back, Walmart Stores Inc. I have access to your live iSeries data. Ask me about inventory, orders, shipments, or anything else. I can also help you reorder, generate reports, or raise returns.",
-    },
-  ]);
-  const [input, setInput] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [dismissedActions, setDismissedActions] = useState<Set<string>>(
-    new Set()
-  );
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
-  async function sendMessage(text: string) {
-    if (!text.trim() || isLoading) return;
-
-    const userMsg: ChatMessage = {
-      id: `user-${Date.now()}`,
-      role: "user",
-      content: text.trim(),
-    };
-
-    const assistantMsg: ChatMessage = {
-      id: `assistant-${Date.now()}`,
-      role: "assistant",
-      content: "",
-    };
-
-    // Add user message and empty assistant message for streaming
-    setMessages((prev) => [...prev, userMsg, assistantMsg]);
-    setInput("");
-    setIsLoading(true);
-
-    try {
-      // Build the messages array for the API (exclude welcome, only include actual conversation)
-      const apiMessages = [
-        ...messages.filter((m) => m.id !== "welcome"),
-        userMsg,
-      ].map((m) => ({
-        role: m.role,
-        content: m.content,
-      }));
-
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: apiMessages }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
-      }
-
-      const reader = response.body?.getReader();
-      if (!reader) throw new Error("No reader");
-
-      const decoder = new TextDecoder();
-      let fullText = "";
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        const chunk = decoder.decode(value, { stream: true });
-        const lines = chunk.split("\n");
-
-        for (const line of lines) {
-          if (!line.startsWith("data: ")) continue;
-          const data = line.slice(6);
-          if (data === "[DONE]") continue;
-
-          try {
-            const parsed = JSON.parse(data);
-            if (parsed.type === "text-delta" && parsed.delta) {
-              fullText += parsed.delta;
-              setMessages((prev) =>
-                prev.map((m) =>
-                  m.id === assistantMsg.id ? { ...m, content: fullText } : m
-                )
-              );
-            }
-          } catch {
-            // skip non-JSON lines
-          }
-        }
-      }
-    } catch (error) {
-      console.error("Chat error:", error);
-      setMessages((prev) =>
-        prev.map((m) =>
-          m.id === assistantMsg.id
-            ? {
-                ...m,
-                content:
-                  "I'm sorry, I encountered an error connecting to the AI service. Please try again.",
-              }
-            : m
-        )
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage(input);
-    }
-  }
-
+function ChatBody({
+  messages,
+  isLoading,
+  dismissedActions,
+  setDismissedActions,
+  messagesEndRef,
+  input,
+  setInput,
+  sendMessage,
+  handleKeyDown,
+}: {
+  messages: ChatMessage[];
+  isLoading: boolean;
+  dismissedActions: Set<string>;
+  setDismissedActions: React.Dispatch<React.SetStateAction<Set<string>>>;
+  messagesEndRef: React.RefObject<HTMLDivElement | null>;
+  input: string;
+  setInput: (v: string) => void;
+  sendMessage: (text: string) => void;
+  handleKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
+}) {
   return (
-    <aside className="w-96 shrink-0 bg-white border-l flex flex-col h-full overflow-hidden">
-      {/* Header */}
-      <div className="flex items-center gap-3 p-4 border-b">
-        <img
-          src="https://amplex.com/wp-content/uploads/2020/11/favicon.png"
-          alt="Amplex AI"
-          className="w-10 h-10 rounded-full shrink-0 object-contain"
-        />
-        <div>
-          <div className="font-display font-semibold text-lg leading-tight">
-            Amplex AI
-          </div>
-          <span className="text-[10px] bg-muted text-muted-foreground rounded-full px-2 py-0.5">
-            Powered by OpenAI
-          </span>
-        </div>
-      </div>
-
+    <>
       {/* Messages area */}
       <div className="flex-1 min-h-0 overflow-y-auto p-4 space-y-4">
         {messages.map((msg) => {
           const isUser = msg.role === "user";
           const isAssistant = msg.role === "assistant";
-          // Don't show action cards on the welcome message
           const actionType =
             isAssistant && msg.id !== "welcome" && msg.content
               ? getActionType(msg.content)
@@ -289,6 +175,204 @@ export function AIPanel() {
           </button>
         </div>
       </div>
-    </aside>
+    </>
+  );
+}
+
+export function AIPanel() {
+  const { aiPanelOpen, setAiPanelOpen } = useMobileNav();
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    {
+      id: "welcome",
+      role: "assistant",
+      content:
+        "Welcome back, Walmart Stores Inc. I have access to your live iSeries data. Ask me about inventory, orders, shipments, or anything else. I can also help you reorder, generate reports, or raise returns.",
+    },
+  ]);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [dismissedActions, setDismissedActions] = useState<Set<string>>(
+    new Set()
+  );
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  async function sendMessage(text: string) {
+    if (!text.trim() || isLoading) return;
+
+    const userMsg: ChatMessage = {
+      id: `user-${Date.now()}`,
+      role: "user",
+      content: text.trim(),
+    };
+
+    const assistantMsg: ChatMessage = {
+      id: `assistant-${Date.now()}`,
+      role: "assistant",
+      content: "",
+    };
+
+    setMessages((prev) => [...prev, userMsg, assistantMsg]);
+    setInput("");
+    setIsLoading(true);
+
+    try {
+      const apiMessages = [
+        ...messages.filter((m) => m.id !== "welcome"),
+        userMsg,
+      ].map((m) => ({
+        role: m.role,
+        content: m.content,
+      }));
+
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: apiMessages }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+
+      const reader = response.body?.getReader();
+      if (!reader) throw new Error("No reader");
+
+      const decoder = new TextDecoder();
+      let fullText = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        const lines = chunk.split("\n");
+
+        for (const line of lines) {
+          if (!line.startsWith("data: ")) continue;
+          const data = line.slice(6);
+          if (data === "[DONE]") continue;
+
+          try {
+            const parsed = JSON.parse(data);
+            if (parsed.type === "text-delta" && parsed.delta) {
+              fullText += parsed.delta;
+              setMessages((prev) =>
+                prev.map((m) =>
+                  m.id === assistantMsg.id ? { ...m, content: fullText } : m
+                )
+              );
+            }
+          } catch {
+            // skip non-JSON lines
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Chat error:", error);
+      setMessages((prev) =>
+        prev.map((m) =>
+          m.id === assistantMsg.id
+            ? {
+                ...m,
+                content:
+                  "I'm sorry, I encountered an error connecting to the AI service. Please try again.",
+              }
+            : m
+        )
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage(input);
+    }
+  }
+
+  const chatBodyProps = {
+    messages,
+    isLoading,
+    dismissedActions,
+    setDismissedActions,
+    messagesEndRef,
+    input,
+    setInput,
+    sendMessage,
+    handleKeyDown,
+  };
+
+  return (
+    <>
+      {/* Desktop aside */}
+      <aside className="hidden lg:flex w-96 shrink-0 bg-white border-l flex-col h-full overflow-hidden">
+        {/* Header */}
+        <div className="flex items-center gap-3 p-4 border-b">
+          <img
+            src="https://amplex.com/wp-content/uploads/2020/11/favicon.png"
+            alt="Amplex AI"
+            className="w-10 h-10 rounded-full shrink-0 object-contain"
+          />
+          <div>
+            <div className="font-display font-semibold text-lg leading-tight">
+              Amplex AI
+            </div>
+            <span className="text-[10px] bg-muted text-muted-foreground rounded-full px-2 py-0.5">
+              Powered by OpenAI
+            </span>
+          </div>
+        </div>
+        <ChatBody {...chatBodyProps} />
+      </aside>
+
+      {/* Mobile FAB */}
+      {!aiPanelOpen && (
+        <button
+          type="button"
+          onClick={() => setAiPanelOpen(true)}
+          className="lg:hidden fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#C41230] text-white rounded-full shadow-lg flex items-center justify-center hover:bg-[#a50f28] transition-colors"
+        >
+          <MessageCircle className="w-6 h-6" />
+        </button>
+      )}
+
+      {/* Mobile full-screen panel */}
+      {aiPanelOpen && (
+        <div className="lg:hidden fixed inset-0 z-50 bg-white flex flex-col">
+          {/* Mobile header */}
+          <div className="flex items-center justify-between px-4 py-3 border-b shrink-0">
+            <div className="flex items-center gap-3">
+              <img
+                src="https://amplex.com/wp-content/uploads/2020/11/favicon.png"
+                alt="Amplex AI"
+                className="w-8 h-8 rounded-full shrink-0 object-contain"
+              />
+              <div>
+                <div className="font-display font-semibold text-base leading-tight">
+                  Amplex AI
+                </div>
+                <span className="text-[10px] bg-muted text-muted-foreground rounded-full px-2 py-0.5">
+                  Powered by OpenAI
+                </span>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setAiPanelOpen(false)}
+              className="p-1.5 rounded-md hover:bg-muted transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          <ChatBody {...chatBodyProps} />
+        </div>
+      )}
+    </>
   );
 }

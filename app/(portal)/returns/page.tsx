@@ -82,11 +82,11 @@ export default function ReturnsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Title Row */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Returns Management</h1>
+          <h1 className="text-xl font-bold">Returns Management</h1>
           <p className="text-sm text-muted-foreground">
             RMA tracking and disposition
           </p>
@@ -123,6 +123,9 @@ export default function ReturnsPage() {
                         ))}
                       </SelectContent>
                     </Select>
+                    {!selectedOrder && (
+                      <p className="text-sm text-muted-foreground">Select an order to continue</p>
+                    )}
                   </div>
                   <Button
                     className="w-full bg-[#1652CC] text-white hover:bg-[#1652CC]/90"
@@ -270,7 +273,7 @@ export default function ReturnsPage() {
       </div>
 
       {/* RMA Log Table */}
-      <Card className="mt-6">
+      <Card>
         <CardHeader>
           <CardTitle className="text-lg font-semibold">RMA Log</CardTitle>
         </CardHeader>
