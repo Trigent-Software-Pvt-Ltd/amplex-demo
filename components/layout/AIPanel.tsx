@@ -6,6 +6,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { ActionCard } from "@/components/portal/ActionCard";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { useMobileNav } from "./MobileNavProvider";
 
 // Quick chip suggestions
@@ -79,13 +81,42 @@ function ChatBody({
             <div key={msg.id} className="space-y-2">
               <div
                 className={cn(
-                  "text-sm leading-relaxed whitespace-pre-wrap",
+                  "text-sm leading-relaxed",
                   isUser
-                    ? "bg-[#0C2340] text-white rounded-2xl rounded-br-md px-4 py-2 max-w-[80%] ml-auto"
+                    ? "whitespace-pre-wrap bg-[#0C2340] text-white rounded-2xl rounded-br-md px-4 py-2 max-w-[80%] ml-auto"
                     : "bg-muted rounded-2xl rounded-bl-md px-4 py-2 max-w-[85%]"
                 )}
               >
-                {msg.content || (isAssistant && isLoading ? "" : msg.content)}
+                {isUser ? (
+                  msg.content
+                ) : (
+                  <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
+                    components={{
+                      p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                      strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+                      ul: ({ children }) => <ul className="list-disc list-inside mb-2 space-y-0.5">{children}</ul>,
+                      ol: ({ children }) => <ol className="list-decimal list-inside mb-2 space-y-0.5">{children}</ol>,
+                      li: ({ children }) => <li className="ml-1">{children}</li>,
+                      h3: ({ children }) => <h3 className="font-semibold mt-3 mb-1">{children}</h3>,
+                      h2: ({ children }) => <h2 className="font-bold mt-3 mb-1">{children}</h2>,
+                      hr: () => <hr className="my-2 border-foreground/10" />,
+                      code: ({ children, className }) => {
+                        const isBlock = className?.includes("language-");
+                        return isBlock ? (
+                          <pre className="bg-foreground/5 rounded p-2 my-2 overflow-x-auto text-xs"><code>{children}</code></pre>
+                        ) : (
+                          <code className="bg-foreground/10 rounded px-1 py-0.5 text-xs font-mono">{children}</code>
+                        );
+                      },
+                      table: ({ children }) => <div className="overflow-x-auto my-2"><table className="text-xs w-full">{children}</table></div>,
+                      th: ({ children }) => <th className="text-left font-semibold p-1 border-b">{children}</th>,
+                      td: ({ children }) => <td className="p-1 border-b border-foreground/5">{children}</td>,
+                    }}
+                  >
+                    {msg.content || ""}
+                  </ReactMarkdown>
+                )}
               </div>
               {actionType && !dismissedActions.has(msg.id) && (
                 <ActionCard
