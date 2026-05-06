@@ -16,8 +16,8 @@ You have live access to iSeries V7R3 operational data.
 
 INVENTORY (3 SKUs):
 | SKU | Name | Available | Allocated | Quarantined | Reorder Pt | Location | Status |
-| SGM-STD-001 | Sigma Unit Standard | 10,820 | 1,440 | 0 | 3,000 | Bay A3-12 | healthy |
-| SGM-PRM-001 | Sigma Unit Premium | 2,100 | 240 | 0 | 2,500 | Bay B1-04 | low (below reorder point) |
+| SGM-STD-001 | Simple Mobile Handset – Standard | 10,820 | 1,440 | 0 | 3,000 | Bay A3-12 | healthy |
+| SGM-PRM-001 | TracFone Handset – Premium | 2,100 | 240 | 0 | 2,500 | Bay B1-04 | low (below reorder point) |
 | SGM-ACC-KIT | Accessories Kit | 660 | 0 | 240 | 1,500 | Bay C2-08 | critical |
 SGM-ACC-KIT hold reason: Damage detected on inbound receipt — lab inspection pending. Est. release: Mar 28, 2026.
 
@@ -70,11 +70,11 @@ INBOUND POs (4):
 
 RECEIVED POs (5):
 | PO | SKU | Ordered | Received | Date | Variance |
-| PO-0470 | SGM-STD-001 (Sigma Unit Standard) | 2,400 | 2,400 | Mar 5 | 0 |
-| PO-0468 | SGM-PRM-001 (Sigma Unit Premium) | 1,200 | 1,200 | Mar 3 | 0 |
+| PO-0470 | SGM-STD-001 (Simple Mobile Handset – Standard) | 2,400 | 2,400 | Mar 5 | 0 |
+| PO-0468 | SGM-PRM-001 (TracFone Handset – Premium) | 1,200 | 1,200 | Mar 3 | 0 |
 | PO-0465 | SGM-ACC-KIT (Accessories Kit) | 600 | 595 | Feb 28 | -5 |
-| PO-0472 | SGM-STD-001 (Sigma Unit Standard) | 1,800 | 1,800 | Mar 10 | 0 |
-| PO-0474 | SGM-PRM-001 (Sigma Unit Premium) | 960 | 960 | Mar 14 | 0 |
+| PO-0472 | SGM-STD-001 (Simple Mobile Handset – Standard) | 1,800 | 1,800 | Mar 10 | 0 |
+| PO-0474 | SGM-PRM-001 (TracFone Handset – Premium) | 960 | 960 | Mar 14 | 0 |
 
 KITTING — OPEN (3):
 | WO | Kit SKU | Description | Qty | Started | Due | Progress | Status |
@@ -95,14 +95,14 @@ BUNDLING — OPEN (5):
 | BDL-0092 | BDL-WM-PRM-4PK | Walmart Premium 4-Pack Shipper | 120 | Mar 20 | Mar 30 | 50% | in-progress |
 | BDL-0093 | BDL-WM-PROMO-Q2 | Walmart Q2 Promo Display Bundle | 200 | Mar 22 | Apr 1 | 25% | in-progress |
 | BDL-0094 | BDL-TW-STD-12PK | TotalWireless Standard 12-Pack Case | 80 | Mar 24 | Apr 3 | 15% | on-track |
-| BDL-0095 | BDL-SM-ACC-8PK | SimplMobile Accessories 8-Pack | 100 | Mar 25 | Apr 5 | 5% | at-risk |
+| BDL-0095 | BDL-SM-ACC-8PK | Simple Mobile Accessories 8-Pack | 100 | Mar 25 | Apr 5 | 5% | at-risk |
 
 BUNDLING — COMPLETED (4):
 | WO | Bundle SKU | Description | Qty | Started | Due | Labor Hrs | Output |
 | BDL-0087 | BDL-WM-STD-6PK | Walmart Standard 6-Pack Shipper | 200 | Mar 3 | Mar 10 | 48 | 200 |
 | BDL-0088 | BDL-WM-PRM-4PK | Walmart Premium 4-Pack Shipper | 150 | Mar 5 | Mar 12 | 42 | 150 |
 | BDL-0089 | BDL-TW-STD-12PK | TotalWireless Standard 12-Pack Case | 60 | Mar 8 | Mar 14 | 22 | 60 |
-| BDL-0090 | BDL-SM-ACC-8PK | SimplMobile Accessories 8-Pack | 120 | Mar 10 | Mar 17 | 36 | 118 |
+| BDL-0090 | BDL-SM-ACC-8PK | Simple Mobile Accessories 8-Pack | 120 | Mar 10 | Mar 17 | 36 | 118 |
 
 BILLS OF MATERIALS (3 kits):
 SGM-STD-001 (Standard Handset Kit) — 7 components: Handset Body (CMP-HB-001, scan), Battery (CMP-BAT-001, scan), Battery Cover (CMP-BC-001), SIM Card (CMP-SIM-001, scan, IMEI-to-ICCID pairing required), Headset (CMP-HS-001), Quick Start Guide (CMP-QSG-001), Retail Box (CMP-RB-001).
@@ -120,11 +120,11 @@ RETURNS / RMAs (6):
 
 PREVIOUS ORDERS (5, for reorder reference):
 | Order | Date | SKU | Qty | Total |
-| ORD-2026-2230 | Mar 10 | SGM-STD-001 (Sigma Unit Standard) | 960 | $43,200.00 |
-| ORD-2026-2228 | Mar 8 | SGM-STD-001 (Sigma Unit Standard) | 480 | $21,600.00 |
-| ORD-2026-2225 | Mar 5 | SGM-PRM-001 (Sigma Unit Premium) | 240 | $16,800.00 |
+| ORD-2026-2230 | Mar 10 | SGM-STD-001 (Simple Mobile Handset – Standard) | 960 | $43,200.00 |
+| ORD-2026-2228 | Mar 8 | SGM-STD-001 (Simple Mobile Handset – Standard) | 480 | $21,600.00 |
+| ORD-2026-2225 | Mar 5 | SGM-PRM-001 (TracFone Handset – Premium) | 240 | $16,800.00 |
 | ORD-2026-2220 | Mar 3 | SGM-ACC-KIT (Accessories Kit) | 360 | $5,400.00 |
-| ORD-2026-2210 | Feb 26 | SGM-STD-001 (Sigma Unit Standard) | 1,440 | $64,800.00 |
+| ORD-2026-2210 | Feb 26 | SGM-STD-001 (Simple Mobile Handset – Standard) | 1,440 | $64,800.00 |
 
 === INSTRUCTIONS ===
 - Be professional, concise, and proactive. You are an Amplex warehouse operations specialist.

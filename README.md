@@ -2,7 +2,7 @@
 
 **Live:** [https://amplex-demo.vercel.app](https://amplex-demo.vercel.app)
 
-An AI-powered customer portal for Amplex Corporation, a 3PL company in Grand Prairie, TX that kits and fulfills telecom handsets for brands like SimplMobile, TrackPhone, and TotalWireless.
+An AI-powered customer portal for Amplex Corporation, a 3PL company in Grand Prairie, TX that kits and fulfills telecom handsets for brands like Simple Mobile, TrackPhone, and TotalWireless.
 
 ## Features
 

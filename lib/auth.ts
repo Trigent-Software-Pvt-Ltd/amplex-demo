@@ -10,10 +10,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (
-          credentials?.email === "walmart@amplex.com" &&
-          credentials?.password === "demo123"
-        ) {
+        const email = credentials?.email;
+        const password = credentials?.password;
+
+        if (email === "walmart@amplex.com" && password === "demo123") {
           return {
             id: "1",
             name: "Walmart Stores Inc.",
@@ -21,6 +21,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             image: null,
           };
         }
+
+        if (email === "mikaj@amplex.com" && password === "Trigent@2026") {
+          return {
+            id: "2",
+            name: "Mika Jaaskelainen",
+            email: "mikaj@amplex.com",
+            image: null,
+          };
+        }
+
         return null;
       },
     }),
